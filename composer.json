@@ -1,0 +1,26 @@
+{
+
+	"name": "azaelcodes/browser-detect",
+	"description": "This is a simple class to detect browser information, currently only a few devices are detected but will be update frequently to add more features.",
+	"keywords": ["browser detect", "user agent"],
+	"homepage": "http://azaelgarcia.com",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Azael Garcia",
+			"homepage": "http://azaelgarcia.com",
+			"role": "Developer"
+
+		}
+	],
+	"require": {
+		"php": ">=5.4.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"AzaelCodes\\Utils\\": "src/"
+		}
+
+	}
+
+}
