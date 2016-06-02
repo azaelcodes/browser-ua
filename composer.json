@@ -1,9 +1,9 @@
 {
 
 	"name": "azaelcodes/browser-detect",
-	"description": "This is a simple class to detect browser information, currently only a few devices are detected but will be update frequently to add more features.",
+	"description": "A simple component to detect browser information",
 	"keywords": ["browser detect", "user agent"],
-	"homepage": "http://azaelgarcia.com",
+	"homepage": "https://github.com/azaelcodes/browser-ua",
 	"license": "MIT",
 	"authors": [
 		{
