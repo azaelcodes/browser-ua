@@ -51,7 +51,7 @@ class Browser {
      * Detect available mobile devices from the browser
      * @throws \Exception
      */
-	public function detectMobileDevices()
+	protected function detectMobileDevices()
 	{
         $browser = $this->getBrowser();
 		if ($browser == null) {
@@ -66,6 +66,17 @@ class Browser {
             $this->isIPad = true;
         }
 	}
+
+    protected function detectOperatingSystem()
+    {
+
+        $browser = $this->getBrowser();
+        if ($browser == null) {
+            throw new \Exception('Unsupported browser #1002');
+            return;
+        }
+
+    }
 
     /**
      * Helper function to debug information
