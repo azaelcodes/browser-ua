@@ -5,38 +5,28 @@ namespace AzaelCodes\Utils;
 class Browser implements BrowserInterface {
 
 
-	private $browser;
-    private $iphone;
-    private $android;
-    private $ipad;
-    private $tablette;
+	private $userAgent;
+    private $device;
 
 	/**
 	 *	Default constructor
 	 */
 	public function __construct()
 	{
-	}
-
-    /**
-     * Detect the browser information and stored data inside this function
-     * that can be used later.
-     */
-
-    public function detect()
-    {
-
-        $this->browser = (array_key_exists('HTTP_USER_AGENT', $_SERVER)) ? $_SERVER['HTTP_USER_AGENT']: null;
-        if ($this->browser == null) {
+        $this->userAgent = (array_key_exists('HTTP_USER_AGENT', $_SERVER)) ? $_SERVER['HTTP_USER_AGENT']: null;
+        if ($this->userAgent == null) {
             throw new \Exception('Unsupported browser #1001');
             return;
         }
 
-    }
+        $this->device = new Device();
+
+	}
+
 
     public function isMobile()
     {
-        // TODO: Implement isMobile() method.
+        return $this->device->isMobile();
     }
 
     public function isDesktop()
@@ -56,17 +46,7 @@ class Browser implements BrowserInterface {
 
     public function getDeviceType()
     {
-        if ($this->browser == null) {
-            throw new \Exception('Unsupported browser #1002');
-            return;
-        }
-        if (stripos($this->browser, 'iPhone')) {
-            $this->iphone = true;
-        } else if (stripos($this->browser, 'Android')) {
-            $this->android = true;
-        } else if (stripos($this->browser, 'iPad')) {
-            $this->ipad = true;
-        }
+       return Device::getDeviceType($this->userAgent);
     }
 
     public function getLanguage()
@@ -100,45 +80,32 @@ class Browser implements BrowserInterface {
         return $osInfo;
     }
 
-
     /**
-     * Detect available mobile devices from the browser
-     * @throws \Exception
+     * This function is now deprecated, no need to detect the browser information since the
+     * constructor will do it.
+     * @deprecated
      */
-	private function detectMobileDevices()
-	{
-		if ($this->browser == null) {
-			throw new \Exception('Unsupported browser #1002');
-			return;
-		}
-        if (stripos($this->browser, 'iPhone')) {
-            $this->iphone = true;
-        } else if (stripos($this->browser, 'Android')) {
-            $this->android = true;
-        } else if (stripos($this->browser, 'iPad')) {
-            $this->ipad = true;
-        }
-	}
 
+    public function detect()
+    {
+
+        $this->userAgent = (array_key_exists('HTTP_USER_AGENT', $_SERVER)) ? $_SERVER['HTTP_USER_AGENT']: null;
+        if ($this->userAgent == null) {
+            throw new \Exception('Unsupported browser #1001');
+            return;
+        }
+
+    }
 
     /**
      * Helper function to debug information
      */
     public function debug()
     {
-        print('-- Start browser detection --');
-        echo '<br>';
-        print_r($this->getBrowser());
-        echo '<br>';
-        print_r('Is iPhone: ' . $this->isiPhone);
-        echo '<br>';
-        print_r('Is Android: ' . $this->isAndroid);
-        echo '<br>';
-        print_r('Is iPad: ' . $this->isIPad);
-        echo '<br>';
-        print_r($this->detectOperatingSystem());
-        echo '<br>';
-        print_r($this->getLanguage());
-
+        return array(
+            'User Agent' => $this->userAgent,
+            'Device Type' => $this->getDeviceType(),
+            'Language' => $this->getLanguage(),
+        );
     }
 }

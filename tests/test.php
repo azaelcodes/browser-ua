@@ -5,4 +5,9 @@ require '../vendor/autoload.php';
 
 $browser = new \AzaelCodes\Utils\Browser();
 $browser->detect();
-$browser->debug();
+
+foreach ($browser->debug() as $key => $value) {
+
+    echo $key . ' : ' . $value . "<br>";
+
+}
