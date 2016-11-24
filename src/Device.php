@@ -5,14 +5,14 @@ namespace AzaelCodes\Utils;
  * Class Device
  * @package AzaelCodes\Utils
  */
-class Device {
+class Device implements DeviceInterface {
 
     private $iPhone;
     private $android;
     private $iPad;
     private $tablet;
     private $mobile;
-    private $serverInfo;
+    private $userAgent;
 
     const DEVICE_IPHONE = 'iPhone';
     const DEVICE_ANDROID = 'Android';
@@ -25,14 +25,18 @@ class Device {
      */
     public function __construct()
     {
-        $this->serverInfo = $_SERVER;
+        if (!array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+            throw new \Exception('Your browser is not compatible : maybe time to upgrade?');
+        }
+        $this->userAgent = $_SERVER['HTTP_USER_AGENT'];
     }
 
-    public function getServerInfo()
-    {
-        return $this->serverInfo;
-    }
-
+    /**
+     * Static function to get device type
+     * @param null $userAgent
+     * @return null|string
+     * @throws \Exception
+     */
     public static function getDeviceType($userAgent = null)
     {
         $deviceType = null;
@@ -51,6 +55,11 @@ class Device {
 
         return !is_null($deviceType) ? $deviceType : 'device_type_not_found';
 
+    }
+
+    public function getServerInfo()
+    {
+        return $_SERVER;
     }
 
     /**
