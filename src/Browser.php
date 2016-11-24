@@ -5,7 +5,7 @@ namespace AzaelCodes\Utils;
 class Browser implements BrowserInterface {
 
 
-	private $userAgent;
+	public $userAgent;
     private $device;
 
 	/**
@@ -46,7 +46,7 @@ class Browser implements BrowserInterface {
 
     public function getDeviceType()
     {
-       return Device::getDeviceType($this->userAgent);
+        return Device::getDeviceType($this->userAgent);
     }
 
     public function getLanguage()
@@ -73,7 +73,7 @@ class Browser implements BrowserInterface {
         }
 
         $start = stripos($browser, '(');
-        $end   = stripos($browser, ')');
+        $end   = stripos($browser, ') ');
 
         $osInfo = substr($browser, $start, $end);
 

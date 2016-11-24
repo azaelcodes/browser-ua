@@ -18,6 +18,7 @@ class Device implements DeviceInterface {
     const DEVICE_ANDROID = 'Android';
     const DEVICE_IPAD = 'iPad';
     const DEVICE_TABLET = 'Android Tablet';
+    const DEVICE_MACINTOSH = 'Macintosh';
 
 
     /**
@@ -45,16 +46,29 @@ class Device implements DeviceInterface {
             throw new \Exception('Invalid user agent information');
         }
 
-        if (stripos($userAgent, self::DEVICE_IPHONE)) {
-            $deviceType = self::DEVICE_IPHONE;
-        } else if (stripos($userAgent, self::DEVICE_ANDROID)) {
-            $deviceType = self::DEVICE_ANDROID;
-        } else if (stripos($userAgent, self::DEVICE_IPAD)) {
-            $deviceType = self::DEVICE_IPAD;
-        }
-
+        $deviceType = self::parseDeviceType($userAgent);
         return !is_null($deviceType) ? $deviceType : 'device_type_not_found';
 
+    }
+
+    /**
+     * Parse the string that contains the device type
+     *
+     * Example:
+     * User Agent : Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1
+     *
+     * Device Information: (iPad; CPU OS 9_1 like Mac OS X)
+     *
+     * @param $userAgent
+     * @return Device type
+     */
+    private static function parseDeviceType($userAgent)
+    {
+        $firstPart = substr($userAgent, strpos($userAgent, '(') + 1);
+        $deviceString = substr($firstPart, 0, strpos($firstPart, ')'));
+        $pieces = explode(';', $deviceString);
+
+        return (!is_null($pieces[1]) || !empty($pieces[1])) ? $pieces[1] : 'not_found';
     }
 
     public function getServerInfo()
