@@ -7,21 +7,19 @@ namespace AzaelCodes\Utils;
  */
 class Device implements DeviceInterface {
 
-    private $iPhone;
-    private $android;
-    private $iPad;
-    private $tablet;
-    private $mobile;
     private $userAgent;
 
     const DEVICE_IPHONE = 'iPhone';
     const DEVICE_ANDROID = 'Android';
     const DEVICE_IPAD = 'iPad';
+    const DEVICE_ITOUCH = 'iTouch';
     const DEVICE_TABLET = 'Android Tablet';
     const DEVICE_MACINTOSH = 'Macintosh';
     const DEVICE_WINDOWS = 'Windows';
-    const DEVICE_LINUX = 'Linux';
+    const OS_IOS = 'iOS';
+    const OS_LINUX = 'Linux';
     const DEVICE_LINUX_IDENTIFIER = 'X11';
+    const DEVICE_MOBILE_IDENTIFIER = 'Mobile';
 
 
     /**
@@ -41,7 +39,7 @@ class Device implements DeviceInterface {
      * @return null|string
      * @throws \Exception
      */
-    public static function getDeviceType($userAgent = null)
+    public static function getOSType($userAgent = null)
     {
         $deviceType = null;
 
@@ -49,7 +47,7 @@ class Device implements DeviceInterface {
             throw new \Exception('Invalid user agent information');
         }
 
-        $deviceType = self::parseDeviceType($userAgent);
+        $deviceType = self::parseOSType($userAgent);
         return !is_null($deviceType) ? $deviceType : 'device_type_not_found';
 
     }
@@ -65,7 +63,7 @@ class Device implements DeviceInterface {
      * @param $userAgent
      * @return Device type
      */
-    private static function parseDeviceType($userAgent)
+    private static function parseOSType($userAgent)
     {
         $firstPart = substr($userAgent, strpos($userAgent, '(') + 1);
         $deviceString = substr($firstPart, 0, strpos($firstPart, ')'));
@@ -76,9 +74,10 @@ class Device implements DeviceInterface {
         } else if (self::isWindows($pieces[0])) {
             $pieces[0] = self::DEVICE_WINDOWS;
         } else if (self::isLinux($pieces[0])) {
-            $pieces[0] = self::DEVICE_LINUX;
+            $pieces[0] = self::OS_LINUX;
+        } else if (self::isIOSDevice($pieces[0])) {
+            $pieces[0] = self::OS_IOS;
         }
-
         return (!is_null($pieces[0]) || !empty($pieces[0])) ? $pieces[0] : 'not_found';
     }
 
@@ -96,14 +95,29 @@ class Device implements DeviceInterface {
         return strpos($userAgentPart, self::DEVICE_ANDROID);
     }
 
+    /**
+     * @param $userAgentPart
+     * @return bool
+     */
     private static function isWindows($userAgentPart)
     {
         return in_array($userAgentPart, self::$windowsPlatformTokens);
     }
 
+    /**
+     * @param $userAgentPart
+     * @return bool|int
+     */
     private static function isLinux($userAgentPart)
     {
-        return strpos($userAgentPart, self::DEVICE_LINUX_IDENTIFIER);
+        return preg_match('/' . self::DEVICE_LINUX_IDENTIFIER . '/', $userAgentPart);
+    }
+
+    private static function isIOSDevice($userAgentPart)
+    {
+        return $userAgentPart == self::DEVICE_IPHONE
+        || $userAgentPart == self::DEVICE_IPAD
+        || $userAgentPart == self::DEVICE_ITOUCH;
     }
 
 
@@ -113,37 +127,6 @@ class Device implements DeviceInterface {
         return $_SERVER;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isIPhone()
-    {
-        return $this->iPhone;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isAndroid()
-    {
-        return $this->android;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isTablet()
-    {
-        return $this->tablet;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isIpad()
-    {
-        return $this->iPad;
-    }
 
     /**
      * TODO Add Logic
@@ -151,7 +134,7 @@ class Device implements DeviceInterface {
      */
     public function isMobile()
     {
-        return true;
+       return preg_match('/' . self::DEVICE_MOBILE_IDENTIFIER . '/', $this->userAgent);
     }
 
     private static $windowsPlatformTokens = array(

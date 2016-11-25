@@ -8,6 +8,6 @@ interface DeviceInterface {
      * @param null $userAgent
      * @return mixed
      */
-    public static function getDeviceType($userAgent = null);
+    public static function getOSType($userAgent = null);
 
 }
