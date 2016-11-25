@@ -19,6 +19,9 @@ class Device implements DeviceInterface {
     const DEVICE_IPAD = 'iPad';
     const DEVICE_TABLET = 'Android Tablet';
     const DEVICE_MACINTOSH = 'Macintosh';
+    const DEVICE_WINDOWS = 'Windows';
+    const DEVICE_LINUX = 'Linux';
+    const DEVICE_LINUX_IDENTIFIER = 'X11';
 
 
     /**
@@ -68,8 +71,42 @@ class Device implements DeviceInterface {
         $deviceString = substr($firstPart, 0, strpos($firstPart, ')'));
         $pieces = explode(';', $deviceString);
 
-        return (!is_null($pieces[1]) || !empty($pieces[1])) ? $pieces[1] : 'not_found';
+        if (self::isAndroidDevice($pieces[1])) {
+            $pieces[0] = self::DEVICE_ANDROID;
+        } else if (self::isWindows($pieces[0])) {
+            $pieces[0] = self::DEVICE_WINDOWS;
+        } else if (self::isLinux($pieces[0])) {
+            $pieces[0] = self::DEVICE_LINUX;
+        }
+
+        return (!is_null($pieces[0]) || !empty($pieces[0])) ? $pieces[0] : 'not_found';
     }
+
+    /**
+     * Check parts of the user agent string to see if the device is Android.
+     *
+     * Android devices return Linux as the main device so we need to do another search to see if
+     * It's also an Android device.
+     *
+     * @param $userAgentPart
+     * @return bool|int
+     */
+    private static function isAndroidDevice($userAgentPart)
+    {
+        return strpos($userAgentPart, self::DEVICE_ANDROID);
+    }
+
+    private static function isWindows($userAgentPart)
+    {
+        return in_array($userAgentPart, self::$windowsPlatformTokens);
+    }
+
+    private static function isLinux($userAgentPart)
+    {
+        return strpos($userAgentPart, self::DEVICE_LINUX_IDENTIFIER);
+    }
+
+
 
     public function getServerInfo()
     {
@@ -116,5 +153,20 @@ class Device implements DeviceInterface {
     {
         return true;
     }
+
+    private static $windowsPlatformTokens = array(
+        'Windows NT 10.0',
+        'Windows NT 6.3',
+        'Windows NT 6.2',
+        'Windows NT 6.1',
+        'Windows NT 6.0',
+        'Windows NT 5.2',
+        'Windows NT 5.1',
+        'Windows NT 5.01',
+        'Windows NT 4.0',
+        'Windows 98',
+        'Windows 95',
+        'Windows CE',
+    );
 
 }
