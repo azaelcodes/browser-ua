@@ -39,7 +39,7 @@ class Device implements DeviceInterface {
      * @return null|string
      * @throws \Exception
      */
-    public static function getOSType($userAgent = null)
+    public static function getDeviceOS($userAgent = null)
     {
         $deviceType = null;
 
@@ -129,7 +129,7 @@ class Device implements DeviceInterface {
 
 
     /**
-     * TODO Add Logic
+     * Check if the user agent contains the Mobile identifier
      * @return boolean
      */
     public function isMobile()
@@ -137,6 +137,10 @@ class Device implements DeviceInterface {
        return preg_match('/' . self::DEVICE_MOBILE_IDENTIFIER . '/', $this->userAgent);
     }
 
+    /**
+     * A list of windows platform tokens
+     * @var array
+     */
     private static $windowsPlatformTokens = array(
         'Windows NT 10.0',
         'Windows NT 6.3',

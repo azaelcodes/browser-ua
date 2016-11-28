@@ -23,15 +23,23 @@ class Browser implements BrowserInterface {
 
 	}
 
-
+    /**
+     * Check if the current device is a Mobile one.
+     * @return bool
+     */
     public function isMobile()
     {
         return $this->device->isMobile();
     }
 
+    /**
+     * Since we already have a isMobile function it is easy to check if
+     * the current device is desktop.
+     * @return bool
+     */
     public function isDesktop()
     {
-        // TODO: Implement isDesktop() method.
+        return !$this->device->isMobile();
     }
 
     public function getBrowserType()
@@ -46,7 +54,7 @@ class Browser implements BrowserInterface {
 
     public function getDeviceType()
     {
-        return Device::getOSType($this->userAgent);
+        return null;
     }
 
     public function getLanguage()
@@ -64,20 +72,16 @@ class Browser implements BrowserInterface {
         // TODO: Implement getRegion() method.
     }
 
+    /**
+     * Get OS type
+     *
+     * Example: Windows, Linux, iOS, etc..
+     *
+     * @return null|string
+     */
     public function getOS()
     {
-        $browser = $this->getBrowser();
-        if ($browser == null) {
-            throw new \Exception('Unsupported browser #1002');
-            return;
-        }
-
-        $start = stripos($browser, '(');
-        $end   = stripos($browser, ') ');
-
-        $osInfo = substr($browser, $start, $end);
-
-        return $osInfo;
+        return Device::getDeviceOS($this->userAgent);
     }
 
     /**
@@ -104,8 +108,9 @@ class Browser implements BrowserInterface {
     {
         return array(
             'User Agent' => $this->userAgent,
-            'Device Type' => $this->getDeviceType(),
+            'OS' => $this->getOS(),
             'Mobile Device' => $this->isMobile(),
+            'Desktop' => $this->isDesktop(),
             'Language' => $this->getLanguage(),
         );
     }
