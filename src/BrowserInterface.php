@@ -29,6 +29,12 @@ interface BrowserInterface {
     public function isDesktop();
 
     /**
+     * Check if the current device is Tablet
+     * @return mixed
+     */
+    public function isTablet();
+
+    /**
      * Get the operating system
      *
      * Example: Windows, Mac, Linux, Android, iOS

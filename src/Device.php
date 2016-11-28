@@ -9,12 +9,18 @@ class Device implements DeviceInterface {
 
     private $userAgent;
 
-    const DEVICE_IPHONE = 'iPhone';
-    const DEVICE_ANDROID = 'Android';
-    const DEVICE_IPAD = 'iPad';
-    const DEVICE_ITOUCH = 'iTouch';
+    const APPLE = 'Apple';
+    const ANDROID = 'Android';
+    const DEVICE_IDENTIFIER_IPHONE = 'iPhone';
+    const DEVICE_IPHONE = 'Apple iPhone';
+    const DEVICE_ANDROID = 'Android Device';
+    const DEVICE_ANDROID_TABLET = 'Android Tablet';
+    const DEVICE_IDENTIFIER_IPAD = 'iPad';
+    const DEVICE_IPAD = 'Apple iPad';
+    const DEVICE_IDENTIFIER_ITOUCH = 'iTouch';
+    const DEVICE_ITOUCH = 'Apple iTouch';
     const DEVICE_TABLET = 'Android Tablet';
-    const DEVICE_MACINTOSH = 'Macintosh';
+    const DEVICE_MACINTOSH = 'Mac';
     const DEVICE_WINDOWS = 'Windows';
     const OS_IOS = 'iOS';
     const OS_LINUX = 'Linux';
@@ -53,6 +59,38 @@ class Device implements DeviceInterface {
     }
 
     /**
+     * @see DeviceInterface
+     * @param null $userAgent
+     *
+     * @return iPhone, Android Phone, etc.. or not_found
+     */
+    public static function getDeviceType($userAgent = null)
+    {
+        $deviceType = 'not_found';
+
+        if (is_null($userAgent)) {
+            return $deviceType;
+        }
+        $firstPart = substr($userAgent, strpos($userAgent, '(') + 1);
+        $deviceString = substr($firstPart, 0, strpos($firstPart, ')'));
+        $pieces = explode(';', $deviceString);
+
+        if (self::isLinux($pieces[0])) {
+            $pieces[0] = $pieces[1];
+        } else if (self::isIOSDevice($pieces[0])) {
+            $pieces[0] = self::APPLE . ' ' . $pieces[0];
+        } else if (self::isAndroidDevice($pieces[1])) {
+            $pieces[0] = self::DEVICE_ANDROID;
+        } else if (self::isWindows($pieces[0])) {
+            $pieces[0] = self::DEVICE_WINDOWS;
+        }
+
+        return (!is_null($pieces[0]) || !empty($pieces[0])) ? $pieces[0] : 'not_found';
+
+    }
+
+
+    /**
      * Parse the string that contains the device type
      *
      * Example:
@@ -70,13 +108,15 @@ class Device implements DeviceInterface {
         $pieces = explode(';', $deviceString);
 
         if (self::isAndroidDevice($pieces[1])) {
-            $pieces[0] = self::DEVICE_ANDROID;
+            $pieces[0] = $pieces[1];
         } else if (self::isWindows($pieces[0])) {
-            $pieces[0] = self::DEVICE_WINDOWS;
+            $pieces[0] = self::$windowsOS[$pieces[0]];
         } else if (self::isLinux($pieces[0])) {
             $pieces[0] = self::OS_LINUX;
         } else if (self::isIOSDevice($pieces[0])) {
             $pieces[0] = self::OS_IOS;
+        } else if (self::isMacOS($pieces[1])) {
+            $pieces[0] = $pieces[1];
         }
         return (!is_null($pieces[0]) || !empty($pieces[0])) ? $pieces[0] : 'not_found';
     }
@@ -92,7 +132,7 @@ class Device implements DeviceInterface {
      */
     private static function isAndroidDevice($userAgentPart)
     {
-        return strpos($userAgentPart, self::DEVICE_ANDROID);
+        return strpos($userAgentPart, self::ANDROID);
     }
 
     /**
@@ -115,9 +155,24 @@ class Device implements DeviceInterface {
 
     private static function isIOSDevice($userAgentPart)
     {
-        return $userAgentPart == self::DEVICE_IPHONE
-        || $userAgentPart == self::DEVICE_IPAD
-        || $userAgentPart == self::DEVICE_ITOUCH;
+        return $userAgentPart == self::DEVICE_IDENTIFIER_IPHONE
+        || $userAgentPart == self::DEVICE_IDENTIFIER_IPAD
+        || $userAgentPart == self::DEVICE_IDENTIFIER_ITOUCH;
+    }
+
+    private static function isMacOS($userAgentPart)
+    {
+        return strpos($userAgentPart, self::DEVICE_MACINTOSH);
+    }
+
+    /**
+     * Static function to see if the crrent device is a an Android Tablet
+     * @param $userAgentPart
+     * @return bool
+     */
+    public static function isAndroidTablet($userAgentPart)
+    {
+        return !self::isMobile() && strpos($userAgentPart, self::ANDROID);
     }
 
 
@@ -132,9 +187,14 @@ class Device implements DeviceInterface {
      * Check if the user agent contains the Mobile identifier
      * @return boolean
      */
-    public function isMobile()
+    public static function isMobile()
     {
-       return preg_match('/' . self::DEVICE_MOBILE_IDENTIFIER . '/', $this->userAgent);
+        $userAgent = $_SERVER['HTTP_USER_AGENT'];
+        if (is_null($userAgent)) {
+            return false;
+        }
+
+        return preg_match('/' . self::DEVICE_MOBILE_IDENTIFIER . '/', $userAgent);
     }
 
     /**
@@ -154,6 +214,23 @@ class Device implements DeviceInterface {
         'Windows 98',
         'Windows 95',
         'Windows CE',
+    );
+
+    private static $windowsOS = array(
+
+        'Windows NT 10.0' => 'Windows 10',
+        'Windows NT 6.3'  => 'Windows 8.1',
+        'Windows NT 6.2'  => 'Windows 8',
+        'Windows NT 6.1'  => 'Windows 7',
+        'Windows NT 6.0'  => 'Windows Vista',
+        'Windows NT 5.2'  => 'Windows Server 2003; Windows XP x64 Edition',
+        'Windows NT 5.1'  => 'Windows XP',
+        'Windows NT 5.01' => 'Windows 2000, Service Pack 1 (SP1)',
+        'Windows NT 4.0'  => 'Windows 2000',
+        'Windows 98'      => 'Windows 98',
+        'Windows 95'      => 'Windows 95',
+        'Windows CE'      => 'Windows 95',
+
     );
 
 }
