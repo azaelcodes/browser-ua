@@ -42,6 +42,16 @@ class Browser implements BrowserInterface {
         return !$this->device->isMobile();
     }
 
+    /**
+     * TODO Add logic
+     * @return bool
+     */
+    public function isTablet()
+    {
+        return false;
+    }
+
+
     public function getBrowserType()
     {
         // TODO: Implement getBrowserType() method.
