@@ -29,7 +29,7 @@ class Browser implements BrowserInterface {
      */
     public function isMobile()
     {
-        return $this->device->isMobile();
+        return Device::isMobile();
     }
 
     /**
@@ -39,7 +39,7 @@ class Browser implements BrowserInterface {
      */
     public function isDesktop()
     {
-        return !$this->device->isMobile();
+        return !$this->device->isMobile() && !$this->isTablet();
     }
 
     /**
@@ -48,7 +48,7 @@ class Browser implements BrowserInterface {
      */
     public function isTablet()
     {
-        return false;
+        return Device::isAndroidTablet($this->userAgent);
     }
 
 
@@ -121,6 +121,7 @@ class Browser implements BrowserInterface {
             'OS' => $this->getOS(),
             'Mobile Device' => $this->isMobile(),
             'Desktop' => $this->isDesktop(),
+            'Tablet' => $this->isTablet(),
             'Device Type' => $this->getDeviceType(),
             'Language' => $this->getLanguage(),
         );

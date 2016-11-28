@@ -14,6 +14,7 @@ class Device implements DeviceInterface {
     const DEVICE_IDENTIFIER_IPHONE = 'iPhone';
     const DEVICE_IPHONE = 'Apple iPhone';
     const DEVICE_ANDROID = 'Android Device';
+    const DEVICE_ANDROID_TABLET = 'Android Tablet';
     const DEVICE_IDENTIFIER_IPAD = 'iPad';
     const DEVICE_IPAD = 'Apple iPad';
     const DEVICE_IDENTIFIER_ITOUCH = 'iTouch';
@@ -164,6 +165,11 @@ class Device implements DeviceInterface {
         return strpos($userAgentPart, self::DEVICE_MACINTOSH);
     }
 
+    public static function isAndroidTablet($userAgentPart)
+    {
+        return !self::isMobile() && strpos($userAgentPart, self::ANDROID);
+    }
+
 
 
     public function getServerInfo()
@@ -176,9 +182,14 @@ class Device implements DeviceInterface {
      * Check if the user agent contains the Mobile identifier
      * @return boolean
      */
-    public function isMobile()
+    public static function isMobile()
     {
-       return preg_match('/' . self::DEVICE_MOBILE_IDENTIFIER . '/', $this->userAgent);
+        $userAgent = $_SERVER['HTTP_USER_AGENT'];
+        if (is_null($userAgent)) {
+            return false;
+        }
+
+        return preg_match('/' . self::DEVICE_MOBILE_IDENTIFIER . '/', $userAgent);
     }
 
     /**
