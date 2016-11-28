@@ -80,6 +80,8 @@ class Device implements DeviceInterface {
             $pieces[0] = self::APPLE . ' ' . $pieces[0];
         } else if (self::isAndroidDevice($pieces[1])) {
             $pieces[0] = self::DEVICE_ANDROID;
+        } else if (self::isWindows($pieces[0])) {
+            $pieces[0] = self::DEVICE_WINDOWS;
         }
 
         return (!is_null($pieces[0]) || !empty($pieces[0])) ? $pieces[0] : 'not_found';
