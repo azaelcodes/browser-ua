@@ -39,11 +39,12 @@ class Browser implements BrowserInterface {
      */
     public function isDesktop()
     {
-        return !$this->device->isMobile() && !$this->isTablet();
+        return !$this->isMobile() && !$this->isTablet();
     }
 
     /**
-     * TODO Add logic
+     * Check if the current device is a tablet
+     * @see
      * @return bool
      */
     public function isTablet()

@@ -165,6 +165,11 @@ class Device implements DeviceInterface {
         return strpos($userAgentPart, self::DEVICE_MACINTOSH);
     }
 
+    /**
+     * Static function to see if the crrent device is a an Android Tablet
+     * @param $userAgentPart
+     * @return bool
+     */
     public static function isAndroidTablet($userAgentPart)
     {
         return !self::isMobile() && strpos($userAgentPart, self::ANDROID);
