@@ -35,6 +35,32 @@ interface BrowserInterface {
     public function isTablet();
 
     /**
+     * @return mixed
+     */
+    public function isAndroid();
+
+    /**
+     * @return mixed
+     */
+    public function isIPhone();
+
+    /**
+     * @return mixed
+     */
+    public function isIPad();
+
+    /**
+     * @return mixed
+     */
+    public function isWindows();
+
+    /**
+     * @return mixed
+     */
+    public function isMac();
+
+
+    /**
      * Get the operating system
      *
      * Example: Windows, Mac, Linux, Android, iOS
