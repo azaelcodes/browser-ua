@@ -1,154 +1,117 @@
 <?php
 
 namespace AzaelCodes\Utils;
-/**
- * This is a simple class to detect browser information, the current features support
- * - iPhone Detect
- * - Android Detect
- * - iPad Detect
- *
- * More features will be added in the future
- *
- * Class Browser
- * @package AzaelCodes\Utils
- */
-class Browser {
+
+class Browser implements BrowserInterface {
 
 
-	private $browser;
-    private $isiPhone;
-    private $isIPad;
-    private $isAndroid;
-	
+	public $userAgent;
+    private $device;
+
 	/**
 	 *	Default constructor
 	 */
 	public function __construct()
 	{
-	}
-
-    /**
-     * First function to call which detects browser information from the client
-     * @throws \Exception
-     */
-	public function detect()
-	{
-		
-		$browser = (array_key_exists('HTTP_USER_AGENT', $_SERVER)) ? $_SERVER['HTTP_USER_AGENT']: null;
-		if ($browser == null) {
-			throw new \Exception('Unsupported browser #1001');
-			return;
-		}
-
-		// Let's store the browser information inside a class variable for later use.
-		self::setBrowser($browser);
-
-        // Detect mobile devices
-		$this->detectMobileDevices();
-	}
-
-    /**
-     * Detect available mobile devices from the browser
-     * @throws \Exception
-     */
-	public function detectMobileDevices()
-	{
-        $browser = $this->getBrowser();
-		if ($browser == null) {
-			throw new \Exception('Unsupported browser #1002');
-			return;
-		}
-        if (stripos($browser, 'iPhone')) {
-            $this->setIsIPhone(true);
-        } else if (stripos($browser, 'Android')) {
-            $this->setIsAndroid(true);
-        } else if (stripos($browser, 'iPad')) {
-            $this->isIPad = true;
+        $this->userAgent = (array_key_exists('HTTP_USER_AGENT', $_SERVER)) ? $_SERVER['HTTP_USER_AGENT']: null;
+        if ($this->userAgent == null) {
+            throw new \Exception('Unsupported browser #1001');
+            return;
         }
+
+        $this->device = new Device();
+
 	}
+
+    /**
+     * Check if the current device is a Mobile one.
+     * @return bool
+     */
+    public function isMobile()
+    {
+        return $this->device->isMobile();
+    }
+
+    /**
+     * Since we already have a isMobile function it is easy to check if
+     * the current device is desktop.
+     * @return bool
+     */
+    public function isDesktop()
+    {
+        return !$this->device->isMobile();
+    }
+
+    public function getBrowserType()
+    {
+        // TODO: Implement getBrowserType() method.
+    }
+
+    public function getBrowserVersion()
+    {
+        // TODO: Implement getBrowserVersion() method.
+    }
+
+    public function getDeviceType()
+    {
+        return null;
+    }
+
+    public function getLanguage()
+    {
+        return Location::getLanguage($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    }
+
+    public function getCountry()
+    {
+        // TODO: Implement getCountry() method.
+    }
+
+    public function getRegion()
+    {
+        // TODO: Implement getRegion() method.
+    }
+
+    /**
+     * Get OS type
+     *
+     * Example: Windows, Linux, iOS, etc..
+     *
+     * @return null|string
+     */
+    public function getOS()
+    {
+        return Device::getDeviceOS($this->userAgent);
+    }
+
+    /**
+     * This function is now deprecated, no need to detect the browser information since the
+     * constructor will do it.
+     * @deprecated
+     */
+
+    public function detect()
+    {
+
+        $this->userAgent = (array_key_exists('HTTP_USER_AGENT', $_SERVER)) ? $_SERVER['HTTP_USER_AGENT']: null;
+        if ($this->userAgent == null) {
+            throw new \Exception('Unsupported browser #1001');
+            return;
+        }
+
+    }
 
     /**
      * Helper function to debug information
      */
     public function debug()
     {
-        print('-- Start browser detection --');
-        echo '<br>';
-        print_r($this->getBrowser());
-        echo '<br>';
-        print_r('Is iPhone: ' . $this->isiPhone);
-        echo '<br>';
-        print_r('Is Android: ' . $this->isAndroid);
-        echo '<br>';
-        print_r('Is iPad: ' . $this->isIPad);
-
+        return array(
+            'User Agent' => $this->userAgent,
+            'OS' => $this->getOS(),
+            'Mobile Device' => $this->isMobile(),
+            'Desktop' => $this->isDesktop(),
+            'Language' => $this->getLanguage(),
+        );
     }
-
-    /**
-     * @param boolean $iphone
-     */
-    public function setIsIPhone($iphone)
-    {
-        $this->isiPhone = $iphone;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isPhone()
-    {
-        return $this->isiPhone;
-    }
-
-    /**
-     * @param boolean $android
-     */
-    public function setIsAndroid($android)
-    {
-        $this->isAndroid = $android;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isAndroid()
-    {
-        return $this->isAndroid;
-    }
-
-    /**
-     * @param boolean $ipad
-     */
-    public function setIsIPad($ipad)
-    {
-        $this->isIPad = $ipad;
-    }
-
-
-    /**
-     * @return boolean
-     */
-    public function isIpad()
-    {
-        return $this->isIPad;
-    }
-
-
-    /**
-     * @param String $browser
-     */
-	public function setBrowser($browser)
-	{
-		$this->browser = $browser;
-	}
-
-    /**
-     * @return user agent
-     */
-	public function getBrowser()
-	{
-		return $this->browser;
-	}
-
-
 }
