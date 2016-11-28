@@ -54,7 +54,7 @@ class Browser implements BrowserInterface {
 
     public function getDeviceType()
     {
-        return null;
+        return Device::getDeviceType($this->userAgent);
     }
 
     public function getLanguage()
@@ -111,6 +111,7 @@ class Browser implements BrowserInterface {
             'OS' => $this->getOS(),
             'Mobile Device' => $this->isMobile(),
             'Desktop' => $this->isDesktop(),
+            'Device Type' => $this->getDeviceType(),
             'Language' => $this->getLanguage(),
         );
     }
