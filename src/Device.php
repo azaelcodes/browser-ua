@@ -20,7 +20,8 @@ class Device implements DeviceInterface {
     const DEVICE_IDENTIFIER_ITOUCH = 'iTouch';
     const DEVICE_ITOUCH = 'Apple iTouch';
     const DEVICE_TABLET = 'Android Tablet';
-    const DEVICE_MACINTOSH = 'Mac';
+    const DEVICE_MACINTOSH = 'Macintosh';
+    const DEVICE_MAC = 'Mac';
     const DEVICE_WINDOWS = 'Windows';
     const OS_IOS = 'iOS';
     const OS_LINUX = 'Linux';
