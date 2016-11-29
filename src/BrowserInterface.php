@@ -59,6 +59,12 @@ interface BrowserInterface {
      */
     public function isMac();
 
+    /**
+     * Function to get Linux flag
+     * @return mixed
+     */
+    public function isLinux();
+
 
     /**
      * Get the operating system

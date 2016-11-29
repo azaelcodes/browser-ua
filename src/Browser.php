@@ -81,6 +81,17 @@ class Browser implements BrowserInterface {
         return $this->getDeviceType() == Device::DEVICE_MACINTOSH;
     }
 
+    /**
+     * When getting a Linux device type it returns a String with the
+     * Linux identifier, that way we can do a simple check for it
+     * and return
+     * @return bool|int
+     */
+    public function isLinux()
+    {
+        return strpos($this->getDeviceType(), Device::OS_LINUX);
+    }
+
 
     public function getBrowserType()
     {
