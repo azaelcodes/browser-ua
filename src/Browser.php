@@ -52,6 +52,44 @@ class Browser implements BrowserInterface {
         return Device::isAndroidTablet($this->userAgent);
     }
 
+    /**
+     * Check if the current device is Android
+     * @return bool
+     */
+    public function isAndroid()
+    {
+        return $this->getDeviceType() == Device::DEVICE_ANDROID;
+    }
+
+    public function isIPhone()
+    {
+        return $this->getDeviceType() == Device::DEVICE_IPHONE;
+    }
+
+    public function isIPad()
+    {
+        return $this->getDeviceType() == Device::DEVICE_IPAD;
+    }
+
+    public function isWindows()
+    {
+        return $this->getDeviceType() == Device::DEVICE_WINDOWS;
+    }
+
+    public function isMac()
+    {
+        return $this->getDeviceType() == Device::DEVICE_MACINTOSH;
+    }
+
+    /**
+     * A linux device is identified by its OS.
+     * @return bool|int
+     */
+    public function isLinux()
+    {
+        return $this->getOS() == Device::OS_LINUX;
+    }
+
 
     public function getBrowserType()
     {
