@@ -82,14 +82,12 @@ class Browser implements BrowserInterface {
     }
 
     /**
-     * When getting a Linux device type it returns a String with the
-     * Linux identifier, that way we can do a simple check for it
-     * and return
+     * A linux device is identified by its OS.
      * @return bool|int
      */
     public function isLinux()
     {
-        return strpos($this->getDeviceType(), Device::OS_LINUX);
+        return $this->getOS() == Device::OS_LINUX;
     }
 
 
