@@ -1,14 +1,14 @@
 {
 
 	"name": "azaelcodes/browser-detect",
-	"description": "A simple component to detect browser information",
+	"description": "A PHP package to detect browser information such as Language, Device Type, OS, Version, and more...",
 	"keywords": ["browser detect", "user agent"],
 	"homepage": "https://github.com/azaelcodes/browser-ua",
 	"license": "MIT",
 	"authors": [
 		{
 			"name": "Azael Garcia",
-			"homepage": "http://azaelgarcia.com",
+			"homepage": "https://github.com/azaelcodes",
 			"role": "Developer"
 
 		}
